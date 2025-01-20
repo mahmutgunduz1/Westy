@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Temel Renkler -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="background">#FFFFFF</color>
+    <color name="primary">#FF5722</color>
+    <color name="primary_dark">#E64A19</color>
+    <color name="accent">#FF8A65</color>
+    <color name="bsibsi">#FF808080</color>
+
+    <!-- Ana Renkler -->
+    <color name="primary_orange">#FF5722</color>
+    <color name="primary_orange_light">#FF8A65</color>
+    <color name="primary_orange_dark">#E64A19</color>
+    
+    <!-- Nötr Renkler -->
+    <color name="surface_color">#FFFFFF</color>
+    <color name="card_stroke_color">#E0E0E0</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#61000000</color>
+
+    <!-- UI Öğeleri için Renkler -->
+    <color name="gray_600">#757575</color>
+    <color name="icon_background">#F5F5F5</color>
+    <color name="image_background">#EFEFEF</color>
+    <color name="price_color">#D32F2F</color>
+    <color name="chip_background">#F5F5F5</color>
+    <color name="stroke_color">#E0E0E0</color>
+
+    <!-- Eski Renkler (Uyumluluk için) -->
+    <color name="orange">#FF5722</color>
+    <color name="orange_light">#1AFF5722</color>
+    <color name="whiteasıl">#F7F7F7</color>
+    <color name="textcolor">#3B3B3B</color>
+
+    <!-- Buton Renkleri -->
+    <color name="button_yellow">#FFC107</color>  <!-- Koyu sarı -->
+    <color name="button_yellow_dark">#FFA000</color>  <!-- Tıklama efekti için -->
+    <color name="button_text">#000000</color>  <!-- Buton yazı rengi -->
+</resources>

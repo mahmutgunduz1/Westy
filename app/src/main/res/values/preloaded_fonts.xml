@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/almendra</item>
+        <item>@font/amarante</item>
+        <item>@font/bruno_ace_sc</item>
+        <item>@font/playfair_display_sc</item>
+        <item>@font/roboto_thin</item>
+    </array>
+</resources>

@@ -1,0 +1,37 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Westy" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+
+        <item name="android:textColor">@color/black</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="android:statusBarColor">@color/bsibsi</item>
+
+
+        <item name="android:editTextColor">@color/black</item>
+        <item name="android:textColorHint">@color/bsibsi</item>
+
+    </style>
+
+    <style name="Theme.Westy" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Status bar ayarları -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>  <!-- status bar ikonları siyah -->
+        
+        <!-- Diğer tema özellikleri -->
+        <item name="colorPrimary">@color/primary_orange</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="CustomBottomSheetDialog" parent="Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>

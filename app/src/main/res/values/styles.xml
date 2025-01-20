@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BottomSheet Animasyonu -->
+    <style name="BottomSheetStyles.Animation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <!-- BottomSheet Dialog Teması -->
+    <style name="BottomSheetStyles.Dialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyles.Modal</item>
+    </style>
+
+    <!-- BottomSheet Modal Stili -->
+    <style name="BottomSheetStyles.Modal" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="behavior_peekHeight">0dp</item>
+        <item name="behavior_hideable">true</item>
+    </style>
+
+    <!-- Ana BottomSheet Stili -->
+    <style name="BottomSheetStyles">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <!-- Kategori Butonları için Stiller -->
+    <style name="CategoryButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:background">@drawable/yellow_button_background</item>
+        <item name="android:textColor">@color/button_text</item>
+        <item name="layout_constraintWidth_percent">0.48</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">12dp</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="rippleColor">@color/primary_orange_light</item>
+    </style>
+
+    <style name="CategoryButton.Highlighted" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/surface_color</item>
+        <item name="backgroundTint">@color/primary_orange</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">12dp</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="rippleColor">@color/primary_orange_dark</item>
+    </style>
+
+    <style name="CategoryButton.Full">
+        <item name="android:layout_width">match_parent</item>
+        <item name="layout_constraintWidth_percent">1.0</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+
+    <style name="RoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+</resources> 

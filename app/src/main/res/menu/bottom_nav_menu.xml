@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homePageFragment"
+        android:icon="@drawable/homepage"
+        android:title="Anasayfa" />
+
+    <item
+        android:id="@+id/categoriesFragment"
+        android:icon="@drawable/categories"
+        android:title="Categoriler" />
+
+    <item
+        android:id="@+id/favoritesFragment"
+        android:icon="@drawable/favorite"
+        android:title="Favorilerim" />
+
+    <item
+        android:id="@+id/cardFragment"
+        android:icon="@drawable/basket2"
+        android:title="Sepetim" />
+
+    <item
+        android:id="@+id/accountFragment"
+        android:icon="@drawable/user"
+        android:title="Profil" />
+</menu>
