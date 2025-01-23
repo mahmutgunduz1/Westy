@@ -13,7 +13,13 @@ import com.mahmutgunduz.westy.databinding.ActivityProductDetailsBinding
 
 class ProductDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailsBinding
-    private var selectedSize: String? = null
+    private var selectedSize: String? = null // Seçili beden
+    
+    // ViewPager için görsel listesi
+    private val images = listOf(
+        R.drawable.photo10,
+        R.drawable.photo11
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,50 +31,24 @@ class ProductDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        // Üstü çizili fiyat
+        // Üstü çizili fiyat gösterimi
         binding.originalPrice.paintFlags = binding.originalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-
-        // ViewPager için görseller
+        
         setupProductImages()
-
-        // Beden seçimi için chip'ler
         setupSizeChips()
     }
 
     private fun setupListeners() {
-        // Geri butonu
-        binding.backButton.setOnClickListener {
-            onBackPressed()
-        }
-
-        // Paylaş butonu
-        binding.shareButton.setOnClickListener {
-            shareProduct()
-        }
-
-        // Favori butonu
-        binding.favoriteButton.setOnClickListener {
-            toggleFavorite()
-        }
-
-        // Sepete ekle butonu
-        binding.addToCartButton.setOnClickListener {
-            addToCart()
-        }
-
-        // Beden seçimi
-        binding.sizeChipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val chip = group.findViewById<Chip>(checkedId)
-            selectedSize = chip?.text?.toString()
+        // Tüm butonlar için click listener'ları ayarla
+        with(binding) {
+            backButton.setOnClickListener { onBackPressed() }
+            shareButton.setOnClickListener { shareProduct() }
+            favoriteButton.setOnClickListener { toggleFavorite() }
+            addToCartButton.setOnClickListener { addToCart() }
         }
     }
 
     private fun setupProductImages() {
-        val images = listOf(
-            R.drawable.photo10,
-            R.drawable.photo11
-        )
-
         // ViewPager adapter'ını ayarla
         binding.productImageViewPager.apply {
             adapter = ProductImagesAdapter(images)
@@ -116,27 +96,28 @@ class ProductDetailsActivity : AppCompatActivity() {
     }
 
     private fun toggleFavorite() {
-        // Favori durumunu değiştir
         val isFavorite = binding.favoriteButton.tag as? Boolean ?: false
         binding.favoriteButton.apply {
             tag = !isFavorite
             setImageResource(if (!isFavorite) R.drawable.fav2 else R.drawable.fav1)
         }
+        // String resource kullan
         Toast.makeText(
             this,
-            if (!isFavorite) "Favorilere eklendi" else "Favorilerden çıkarıldı",
+            if (!isFavorite) getString(R.string.added_to_favorites) 
+            else getString(R.string.removed_from_favorites),
             Toast.LENGTH_SHORT
         ).show()
     }
 
     private fun addToCart() {
-        if (selectedSize == null) {
-            Toast.makeText(this, "Lütfen bir beden seçin", Toast.LENGTH_SHORT).show()
-            return
+        // Elvis operatörü ile null kontrolü
+        selectedSize?.let {
+            // Sepete ekleme işlemi
+            Toast.makeText(this, getString(R.string.added_to_cart), Toast.LENGTH_SHORT).show()
+        } ?: run {
+            Toast.makeText(this, getString(R.string.select_size), Toast.LENGTH_SHORT).show()
         }
-
-        // Sepete ekleme işlemi
-        Toast.makeText(this, "Ürün sepete eklendi", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

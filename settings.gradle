@@ -12,22 +12,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-    versionCatalogs {
-        libs {
-            version('kotlin', '1.9.0')
-            library('androidx-core-ktx-v1100', 'androidx.core:core-ktx:1.10.0')
-            library('androidx-appcompat-v161', 'androidx.appcompat:appcompat:1.6.1')
-            library('material', 'com.google.android.material:material:1.9.0')
-            library('androidx-activity-ktx', 'androidx.activity:activity-ktx:1.7.2')
-            library('androidx-constraintlayout-v214', 'androidx.constraintlayout:constraintlayout:2.1.4')
-            library('junit', 'junit:junit:4.13.2')
-            library('androidx-junit-v115', 'androidx.test.ext:junit:1.1.5')
-            library('androidx-espresso-core-v351', 'androidx.test.espresso:espresso-core:3.5.1')
-            library('picasso', 'com.squareup.picasso:picasso:2.8')
-            library('androidx-navigation-fragment-ktx-v253', 'androidx.navigation:navigation-fragment-ktx:2.5.3')
-            library('androidx-navigation-ui-ktx-v253', 'androidx.navigation:navigation-ui-ktx:2.5.3')
-        }
-    }
 }
 
 rootProject.name = "Westy"

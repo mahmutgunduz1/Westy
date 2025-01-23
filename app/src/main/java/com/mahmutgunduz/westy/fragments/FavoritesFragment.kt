@@ -16,6 +16,9 @@ import com.mahmutgunduz.westy.dataBase.FavoritesData
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.io.IOException
+import android.database.sqlite.SQLiteException
+import com.mahmutgunduz.westy.R
 
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
@@ -81,12 +84,24 @@ class FavoritesFragment : Fragment() {
         
         binding.emptyView.visibility = View.VISIBLE
         binding.rcv.visibility = View.GONE
-        Toast.makeText(requireContext(), "Hata: ${error.localizedMessage}", Toast.LENGTH_LONG).show()
+        
+        val errorMessage = when (error) {
+            is IOException -> requireContext().getString(R.string.network_error)
+            is SQLiteException -> requireContext().getString(R.string.database_error)
+            else -> requireContext().getString(R.string.general_error)
+        }
+        
+        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {
         compositeDisposable.clear()
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 }

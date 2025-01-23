@@ -1,11 +1,15 @@
 package com.mahmutgunduz.westy.adapters
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.mahmutgunduz.westy.Model.BottomShetModelSubn
 import com.mahmutgunduz.westy.R
+import com.mahmutgunduz.westy.Views.ProductDetailsActivity
 import com.mahmutgunduz.westy.databinding.FavoritesRecyclerRowBinding
 import com.mahmutgunduz.westy.dataBase.FavoritesData
 import com.mahmutgunduz.westy.dataBase.FavoritesDao
@@ -30,13 +34,32 @@ class FavoritesAdapter(
         fun bind(item: FavoritesData) {
             with(binding) {
                 productName.text = item.name
-                productPrice.text = String.format("%.2f ₺", item.price)
-                
-                Picasso.get()
-                    .load(item.imageUrl)
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .into(productImage)
+                productPrice.text = "${item.price} TL"
+
+                // Ürün resmini ayarla
+                try {
+                    Log.d("FavoritesAdapter", "Setting image resource: ${item.imageUrl}")
+                    productImage.setImageResource(item.imageUrl)
+                } catch (e: Exception) {
+                    Log.e("FavoritesAdapter", "Error loading image with resource ID ${item.imageUrl}: ${e.message}")
+                    // Eğer orijinal resim yüklenemezse, varsayılan resmi kullan
+                    productImage.setImageResource(R.drawable.categories1)
+                }
+
+                root.setOnClickListener {
+                    val productModel = BottomShetModelSubn(
+                        id = item.id,
+                        title = item.name,
+                        img = item.imageUrl,
+                        price = item.price,
+                        oldPrice = item.price,
+                        newPrice = item.price,
+                        discountInfo = ""
+                    )
+                    val intent = Intent(context, ProductDetailsActivity::class.java)
+                    intent.putExtra("product", productModel)
+                    context.startActivity(intent)
+                }
 
                 buttonRemoveFavorite.setOnClickListener {
                     val position = adapterPosition
