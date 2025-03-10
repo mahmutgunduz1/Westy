@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homePageFragment">
+
+    <fragment
+        android:id="@+id/homePageFragment"
+        android:name="com.mahmutgunduz.westy.fragments.HomePageFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home_page" />
+
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.mahmutgunduz.westy.fragments.CategoriesFragment"
+        android:label="Categories"
+        tools:layout="@layout/fragment_categories" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.mahmutgunduz.westy.fragments.FavoritesFragment"
+        android:label="Favorites"
+        tools:layout="@layout/fragment_favorites" />
+
+    <fragment
+        android:id="@+id/cardFragment"
+        android:name="com.mahmutgunduz.westy.fragments.CardFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_card" />
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.mahmutgunduz.westy.fragments.AccountFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_account" />
+        
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.mahmutgunduz.westy.fragments.ProductFragment"
+        android:label="Product Details"
+        tools:layout="@layout/fragment_product">
+        <argument
+            android:name="product"
+            app:argType="com.mahmutgunduz.westy.data.model.Product" />
+    </fragment>
+
+</navigation> 

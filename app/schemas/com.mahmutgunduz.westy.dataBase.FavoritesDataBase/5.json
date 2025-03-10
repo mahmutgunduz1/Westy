@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 4,
-    "identityHash": "b9813ccfd8b7a67504ded56d87496951",
+    "version": 5,
+    "identityHash": "bc63b0ffa69ec61924fd01d4123fd45b",
     "entities": [
       {
         "tableName": "favorites",
@@ -61,7 +61,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "favorites",
+        "tableName": "favorites_old",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `price` REAL NOT NULL, `imageUrl` INTEGER NOT NULL)",
         "fields": [
           {
@@ -102,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b9813ccfd8b7a67504ded56d87496951')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bc63b0ffa69ec61924fd01d4123fd45b')"
     ]
   }
 }

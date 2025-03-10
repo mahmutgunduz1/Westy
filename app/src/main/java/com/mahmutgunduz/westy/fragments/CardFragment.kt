@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mahmutgunduz.westy.R
+import com.mahmutgunduz.westy.databinding.FragmentCardBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +23,9 @@ class CardFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private var _binding: FragmentCardBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,9 +37,32 @@ class CardFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card, container, false)
+    ): View {
+        _binding = FragmentCardBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        // Alışverişe Başla butonuna tıklandığında anasayfaya geçiş yap
+        binding.btnStartShopping.setOnClickListener {
+            // Ana sayfaya geçiş için HomePageFragment'i yükle
+            val homePageFragment = HomePageFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, homePageFragment)
+                .commit()
+            
+            // Bottom navigation'da ana sayfa seçili olsun
+            (requireActivity() as? com.mahmutgunduz.westy.Views.MainActivity)?.let { mainActivity ->
+                mainActivity.binding.bottomNavigationView.selectedItemId = R.id.homePageFragment
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

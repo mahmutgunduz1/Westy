@@ -1,0 +1,28 @@
+[33mcommit 1cc51116a2aa23281cb6286e5060df083b5606b6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Mahmut Gündüz <mahmutgundzz@gmail.com>
+Date:   Thu Jan 23 23:14:26 2025 +0300
+
+    feat: Complete project implementation
+    
+    Added/Modified:
+    - Database: Room implementation with FavoritesDao, FavoritesData, FavoritesDataBase
+    - Adapters: ProductAdapter, FavoritesAdapter, CategoriesAdapter, BottomSheetAdapter
+    - Views: ProductDetailsActivity
+    - Fragments: AccountFragment, FavoritesFragment, ProductFragment
+    - Models: BottomShetModelSubn
+    - Resources: layouts, drawables, strings
+    - Build configurations and properties
+    
+    New Features:
+    - Favorites system
+    - Product listing
+    - Category navigation
+    - Bottom sheet implementation
+    - Database operations
+    - UI/UX improvements
+
+[33mcommit e123f090094cce117fef83c62cd32eb08fc212a6[m
+Author: Mahmut Gündüz <mahmutgundzz@gmail.com>
+Date:   Mon Jan 20 16:39:09 2025 +0300
+
+    Initial commit: Manual data implementation

@@ -3,7 +3,7 @@ package com.mahmutgunduz.westy.dataBase
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "favorites")
+@Entity(tableName = "favorites_old")
 data class FavoritesData(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

@@ -14,12 +14,10 @@ import com.mahmutgunduz.westy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -57,19 +55,14 @@ class MainActivity : AppCompatActivity() {
             setOnNavigationItemReselectedListener { /* Aynı öğeye tekrar tıklandığında bir şey yapma */ }
         }
 
-
-        binding. bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.price_color)
-        binding. bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.black)
-
-
+        binding.bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.price_color)
+        binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.black)
     }
-
 
     fun replaceFragment(fragment: Fragment) {
         val framentManager = supportFragmentManager
         val fragmentTransaction = framentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainerView, fragment)
         fragmentTransaction.commit()
-
     }
 }
