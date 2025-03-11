@@ -29,4 +29,29 @@
     <string name="retry">Tekrar Dene</string>
     <string name="no_products_found">Ürün bulunamadı</string>
     <string name="try_another_category">Başka bir kategori deneyin</string>
+
+    <!-- Cart Strings -->
+    <string name="my_cart">Sepetim</string>
+    <string name="items_in_cart">%d ürün sepette</string>
+    <string name="total_price">Toplam: %s</string>
+    <string name="clear_cart">Sepeti Temizle</string>
+    <string name="checkout">Ödeme Yap</string>
+    <string name="your_cart_is_empty">Sepetiniz Boş</string>
+    <string name="empty_cart_description">Sepetinizde henüz ürün bulunmamaktadır. Alışverişe devam ederek ürünleri sepetinize ekleyebilirsiniz.</string>
+    <string name="continue_shopping">Alışverişe Devam Et</string>
+    <string name="empty_cart_image">Boş Sepet Görseli</string>
+    <string name="decrease_quantity">Miktarı Azalt</string>
+    <string name="increase_quantity">Miktarı Artır</string>
+    <string name="remove_from_cart">Sepetten Kaldır</string>
+    <string name="cart_cleared">Sepet temizlendi</string>
+    <string name="checkout_not_implemented">Ödeme işlemi henüz uygulanmadı</string>
+
+    <plurals name="cart_item_count">
+        <item quantity="one">%d ürün sepette</item>
+        <item quantity="other">%d ürün sepette</item>
+    </plurals>
+
+    <string name="free_shipping">Ücretsiz Kargo</string>
+    <string name="cart_empty">Sepetiniz boş</string>
+    <string name="proceed_to_checkout">Ödemeye Geç</string>
 </resources>

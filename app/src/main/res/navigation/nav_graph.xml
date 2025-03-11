@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/cardFragment"
-        android:name="com.mahmutgunduz.westy.fragments.CardFragment"
+        android:name="com.mahmutgunduz.westy.fragments.CartFragment"
         android:label="Cart"
-        tools:layout="@layout/fragment_card" />
+        tools:layout="@layout/fragment_cart" />
 
     <fragment
         android:id="@+id/accountFragment"

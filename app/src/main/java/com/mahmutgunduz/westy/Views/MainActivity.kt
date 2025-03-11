@@ -9,6 +9,7 @@ import com.mahmutgunduz.westy.fragments.CardFragment
 import com.mahmutgunduz.westy.fragments.CategoriesFragment
 import com.mahmutgunduz.westy.fragments.FavoritesFragment
 import com.mahmutgunduz.westy.fragments.HomePageFragment
+import com.mahmutgunduz.westy.fragments.CartFragment
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,33 +25,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (savedInstanceState == null) {
-            replaceFragment(HomePageFragment()) // Başlangıçta HomePageFragment'i yükle
+        // Check if we should navigate to the cart
+        if (intent.getBooleanExtra("navigate_to_cart", false)) {
+            replaceFragment(CardFragment())
+            binding.bottomNavigationView.selectedItemId = R.id.cardFragment
+        } else {
+            replaceFragment(HomePageFragment())
         }
+
+        // Set up bottom navigation
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.homePageFragment -> {
-                    replaceFragment(HomePageFragment())
-                    true
-                }
-                R.id.categoriesFragment -> {
-                    replaceFragment(CategoriesFragment())
-                    true
-                }
-                R.id.favoritesFragment -> {
-                    replaceFragment(FavoritesFragment())
-                    true
-                }
-                R.id.cardFragment -> {
-                    replaceFragment(CardFragment())
-                    true
-                }
-                R.id.accountFragment -> {
-                    replaceFragment(AccountFragment())
-                    true
-                }
-                else -> false
+                R.id.homePageFragment -> replaceFragment(HomePageFragment())
+                R.id.categoriesFragment -> replaceFragment(CategoriesFragment())
+                R.id.cardFragment -> replaceFragment(CardFragment())
+                R.id.favoritesFragment -> replaceFragment(FavoritesFragment())
+                R.id.accountFragment -> replaceFragment(AccountFragment())
             }
+            true
         }
 
         binding.bottomNavigationView.setOnItemReselectedListener { /* Aynı öğeye tekrar tıklandığında bir şey yapma */ }
@@ -59,10 +51,9 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.black)
     }
 
-    fun replaceFragment(fragment: Fragment) {
-        val framentManager = supportFragmentManager
-        val fragmentTransaction = framentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragmentContainerView, fragment)
-        fragmentTransaction.commit()
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment)
+            .commit()
     }
 }

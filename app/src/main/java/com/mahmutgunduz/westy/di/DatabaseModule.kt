@@ -1,6 +1,8 @@
 package com.mahmutgunduz.westy.di
 
 import android.content.Context
+import com.mahmutgunduz.westy.dataBase.CartDao
+import com.mahmutgunduz.westy.dataBase.CartDatabase
 import com.mahmutgunduz.westy.dataBase.FavoritesDao
 import com.mahmutgunduz.westy.dataBase.FavoritesDataBase
 import dagger.Module
@@ -16,7 +18,7 @@ object DatabaseModule {
     
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): FavoritesDataBase {
+    fun provideFavoritesDatabase(@ApplicationContext context: Context): FavoritesDataBase {
         return FavoritesDataBase.getDatabase(context)
     }
 
@@ -24,5 +26,17 @@ object DatabaseModule {
     @Singleton
     fun provideFavoritesDao(database: FavoritesDataBase): FavoritesDao {
         return database.favoritesDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideCartDatabase(@ApplicationContext context: Context): CartDatabase {
+        return CartDatabase.getDatabase(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCartDao(database: CartDatabase): CartDao {
+        return database.cartDao()
     }
 } 

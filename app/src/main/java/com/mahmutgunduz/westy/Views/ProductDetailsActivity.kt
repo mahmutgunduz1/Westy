@@ -1,5 +1,6 @@
 package com.mahmutgunduz.westy.Views
 
+import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.data.model.Product
 import com.mahmutgunduz.westy.databinding.ActivityProductDetailsBinding
+import com.mahmutgunduz.westy.viewmodel.CartViewModel
 import com.mahmutgunduz.westy.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProductDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailsBinding
     private val viewModel: ProductViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
     private var selectedSize: String? = null // Seçili beden
     private var product: Product? = null
 
@@ -149,12 +152,20 @@ class ProductDetailsActivity : AppCompatActivity() {
     }
 
     private fun addToCart() {
-        // Elvis operatörü ile null kontrolü
-        selectedSize?.let {
-            // Sepete ekleme işlemi
-            Toast.makeText(this, getString(R.string.added_to_cart), Toast.LENGTH_SHORT).show()
-        } ?: run {
-            Toast.makeText(this, getString(R.string.select_size), Toast.LENGTH_SHORT).show()
+        if (selectedSize != null) {
+            // Add the product to cart
+            product?.let {
+                cartViewModel.addToCart(it)
+                Toast.makeText(this, "${it.title} sepete eklendi", Toast.LENGTH_SHORT).show()
+                
+                // Navigate to cart
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("navigate_to_cart", true)
+                startActivity(intent)
+                finish()
+            }
+        } else {
+            Toast.makeText(this, "Lütfen bir beden seçin", Toast.LENGTH_SHORT).show()
         }
     }
     
