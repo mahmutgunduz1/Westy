@@ -10,4 +10,7 @@ interface ShoppingApi {
 
     @GET("products/{id}")
     suspend fun getProductById(@Path("id") id: Int): Product
+    
+    @GET("products/category/{category}")
+    suspend fun getProductsByCategory(@Path("category") category: String): List<Product>
 }

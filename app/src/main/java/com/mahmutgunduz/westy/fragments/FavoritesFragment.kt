@@ -39,7 +39,7 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dao = FavoritesDataBase.getDatabase(requireContext()).noteDao()
+        dao = FavoritesDataBase.getDatabase(requireContext()).favoritesDao()
         setupRecyclerView()
         observeFavorites()
     }

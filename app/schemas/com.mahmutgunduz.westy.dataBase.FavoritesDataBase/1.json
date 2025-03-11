@@ -2,59 +2,47 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "81c68be4aa142d076d9925509da42282",
+    "identityHash": "533d3b9d48c2c64ed1cf67890b30094d",
     "entities": [
       {
         "tableName": "favorites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `price` REAL NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `rating` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`productId` INTEGER NOT NULL, `productName` TEXT NOT NULL, `productPrice` REAL NOT NULL, `productImage` TEXT NOT NULL, `productDescription` TEXT NOT NULL, PRIMARY KEY(`productId`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "productId",
+            "columnName": "productId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "title",
-            "columnName": "title",
+            "fieldPath": "productName",
+            "columnName": "productName",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "price",
-            "columnName": "price",
+            "fieldPath": "productPrice",
+            "columnName": "productPrice",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "description",
-            "columnName": "description",
+            "fieldPath": "productImage",
+            "columnName": "productImage",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "category",
-            "columnName": "category",
+            "fieldPath": "productDescription",
+            "columnName": "productDescription",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "image",
-            "columnName": "image",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "rating",
-            "columnName": "rating",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "productId"
           ]
         },
         "indices": [],
@@ -64,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '81c68be4aa142d076d9925509da42282')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '533d3b9d48c2c64ed1cf67890b30094d')"
     ]
   }
 }

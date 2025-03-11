@@ -12,6 +12,7 @@ import com.mahmutgunduz.westy.fragments.ProductFragment
 import com.mahmutgunduz.westy.Model.BottomShetModelSubn
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.databinding.BottomsheetRcvRecyclerRowBinding
+import com.bumptech.glide.Glide
 
 class BottomSheetAdapter(
     private val bottomSheetModel: List<BottomShetModelSubn>,
@@ -38,7 +39,33 @@ class BottomSheetAdapter(
         val category = bottomSheetModel[position]
 
         holder.binding.categoryName.text = category.title
-        holder.binding.categoryIcon.setImageResource(category.img)
+        
+        // Handle string image resource
+        try {
+            // Try to parse as a resource ID
+            val resourceId = context.resources.getIdentifier(
+                category.img.replace("R.drawable.", ""),
+                "drawable",
+                context.packageName
+            )
+            if (resourceId != 0) {
+                holder.binding.categoryIcon.setImageResource(resourceId)
+            } else {
+                // If not a resource ID, try to load as a URL
+                Glide.with(context)
+                    .load(category.img)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(holder.binding.categoryIcon)
+            }
+        } catch (e: Exception) {
+            // If parsing fails, try to load as a URL
+            Glide.with(context)
+                .load(category.img)
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.error_image)
+                .into(holder.binding.categoryIcon)
+        }
         
         holder.binding.card.setOnClickListener {
             bottomSheet.dismiss()

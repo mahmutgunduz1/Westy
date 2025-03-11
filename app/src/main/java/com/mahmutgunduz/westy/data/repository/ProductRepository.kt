@@ -16,4 +16,8 @@ class ProductRepository @Inject constructor(
     suspend fun getProductById(id: Int): Product {
         return api.getProductById(id)
     }
+    
+    suspend fun getProductsByCategory(category: String): List<Product> {
+        return api.getProductsByCategory(category)
+    }
 } 

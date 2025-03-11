@@ -11,7 +11,9 @@ import com.mahmutgunduz.westy.fragments.FavoritesFragment
 import com.mahmutgunduz.westy.fragments.HomePageFragment
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
@@ -25,35 +27,33 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             replaceFragment(HomePageFragment()) // Başlangıçta HomePageFragment'i yükle
         }
-        binding.bottomNavigationView.apply {
-            setOnNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.homePageFragment -> {
-                        replaceFragment(HomePageFragment())
-                        true
-                    }
-                    R.id.categoriesFragment -> {
-                        replaceFragment(CategoriesFragment())
-                        true
-                    }
-                    R.id.favoritesFragment -> {
-                        replaceFragment(FavoritesFragment())
-                        true
-                    }
-                    R.id.cardFragment -> {
-                        replaceFragment(CardFragment())
-                        true
-                    }
-                    R.id.accountFragment -> {
-                        replaceFragment(AccountFragment())
-                        true
-                    }
-                    else -> false
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.homePageFragment -> {
+                    replaceFragment(HomePageFragment())
+                    true
                 }
+                R.id.categoriesFragment -> {
+                    replaceFragment(CategoriesFragment())
+                    true
+                }
+                R.id.favoritesFragment -> {
+                    replaceFragment(FavoritesFragment())
+                    true
+                }
+                R.id.cardFragment -> {
+                    replaceFragment(CardFragment())
+                    true
+                }
+                R.id.accountFragment -> {
+                    replaceFragment(AccountFragment())
+                    true
+                }
+                else -> false
             }
-            
-            setOnNavigationItemReselectedListener { /* Aynı öğeye tekrar tıklandığında bir şey yapma */ }
         }
+
+        binding.bottomNavigationView.setOnItemReselectedListener { /* Aynı öğeye tekrar tıklandığında bir şey yapma */ }
 
         binding.bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.price_color)
         binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.black)

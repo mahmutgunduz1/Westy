@@ -8,11 +8,25 @@
     <string name="removed_from_favorites">Favorilerden kaldırıldı</string>
     
     <!-- Sepet işlemleri -->
-    <string name="added_to_cart">Ürün sepete eklendi</string>
-    <string name="select_size">Lütfen bir beden seçin</string>
+    <string name="added_to_cart">Sepete eklendi</string>
+    <string name="select_size">Beden Seçin</string>
 
     <!-- Hata mesajları -->
     <string name="network_error">İnternet bağlantısı hatası</string>
     <string name="database_error">Veritabanı hatası</string>
     <string name="general_error">Bir hata oluştu</string>
+
+    <string name="back">Geri</string>
+    <string name="share">Paylaş</string>
+    <string name="product_details">Ürün Detayları</string>
+    <string name="product_image">Ürün Görseli</string>
+    <string name="add_to_favorites">Favorilere Ekle</string>
+    <string name="description">Açıklama</string>
+    <string name="add_to_cart">Sepete Ekle</string>
+    <string name="error">Hata</string>
+    <string name="product_not_found">Ürün bulunamadı</string>
+    <string name="try_again_later">Lütfen daha sonra tekrar deneyin</string>
+    <string name="retry">Tekrar Dene</string>
+    <string name="no_products_found">Ürün bulunamadı</string>
+    <string name="try_another_category">Başka bir kategori deneyin</string>
 </resources>

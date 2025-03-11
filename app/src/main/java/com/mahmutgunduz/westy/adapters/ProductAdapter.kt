@@ -7,22 +7,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-
-import com.mahmutgunduz.westy.Model.BottomShetModelSubn
+import com.bumptech.glide.Glide
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.Views.ProductDetailsActivity
-
+import com.mahmutgunduz.westy.data.model.Product
 import com.mahmutgunduz.westy.dataBase.FavoritesDao
 import com.mahmutgunduz.westy.dataBase.FavoritesData
-
 import com.mahmutgunduz.westy.databinding.ReyclerRowProductBinding
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
+
+
 class ProductAdapter(
-    private var productList: List<BottomShetModelSubn>,
+    private var productList: List<Product>,
     private val context: Context,
     private val dao: FavoritesDao
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
@@ -39,140 +38,108 @@ class ProductAdapter(
             dao.getAllFavorites()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ favorites ->
+                .subscribe({ favorites: List<FavoritesData> ->
                     favoritesList = favorites
                     notifyDataSetChanged()
-                }, { throwable ->
+                }, { throwable: Throwable ->
                     Log.e("ProductAdapter", "Error loading favorites", throwable)
                 })
         )
     }
 
-    class ProductViewHolder(val binding: ReyclerRowProductBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    fun updateProducts(newProducts: List<Product>) {
+        productList = newProducts
+        notifyDataSetChanged()
+    }
+
+    class ProductViewHolder(val binding: ReyclerRowProductBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val inflate = ReyclerRowProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(inflate)
+        val binding = ReyclerRowProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProductViewHolder(binding)
     }
 
     override fun getItemCount(): Int = productList.size
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val item = productList[position]
+        val currentProduct = productList[position]
 
-        // Ürünün favorilerde olup olmadığını kontrol et
-        val isFavorite = favoritesList.any { it.id == item.id }
+        with(holder.binding) {
+            // Ürün bilgilerini göster
+            textViewProductName.text = currentProduct.title
+            textViewProductPrice.text = String.format("%.2f ₺", currentProduct.price)
 
-        holder.binding.apply {
-            // Ürün adı ve detayları bağlama
-            productName.text = item.title
-            oldPrice.text = item.oldPrice.toString()
-            newPrice.text = item.newPrice.toString()
-            discountInfo.text = item.discountInfo
+            // Ürün resmini yükle
+            Glide.with(context)
+                .load(currentProduct.image)
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.error_image)
+                .into(imageViewProduct)
 
-            // Ürün resmini ayarla
-            try {
-                imageProduct.setImageResource(item.img)
-            } catch (e: Exception) {
-                Log.e("ProductAdapter", "Error loading image: ${e.message}")
-                imageProduct.setImageResource(R.drawable.categories1)
+            // Favorilerde olup olmadığını kontrol et
+            val isFavorite = favoritesList.any { it.productId == currentProduct.id }
+            imageViewFavorite.setImageResource(if (isFavorite) R.drawable.fav2 else R.drawable.fav1)
+
+            // Favori butonuna tıklama
+            imageViewFavorite.setOnClickListener {
+                toggleFavorite(currentProduct)
             }
 
-            // Favori ikonunu güncelle (fav1 veya fav2)
-            iconFavorite.setImageResource(
-                if (isFavorite) R.drawable.fav2 else R.drawable.fav1
-            )
-
-            // Add click listener to the entire item
+            // Ürüne tıklama
             root.setOnClickListener {
-                val intent = Intent(context, ProductDetailsActivity::class.java)
-                intent.putExtra("product", item)
-                context.startActivity(intent)
-            }
-
-            iconFavorite.setOnClickListener {
-                toggleFavorite(item, holder)
+                navigateToProductDetails(currentProduct)
             }
         }
     }
 
-    private fun toggleFavorite(item: BottomShetModelSubn, holder: ProductViewHolder) {
-        compositeDisposable.add(
-            dao.getAllFavorites() // Önce tüm favorileri al
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ favorites ->
-                    val isFavorite = favorites.any { it.id == item.id }
-                    if (isFavorite) {
-                        removeFromFavorites(item, holder)
-                    } else {
-                        addToFavorites(item, holder)
-                    }
-                }, { error ->
-                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_SHORT).show()
-                })
-        )
-    }
+    private fun toggleFavorite(product: Product) {
+        val isFavorite = favoritesList.any { it.productId == product.id }
 
-    private fun addToFavorites(item: BottomShetModelSubn, holder: ProductViewHolder) {
-        val favorite = item.toFavoritesData()
-        compositeDisposable.add(
-            dao.insert(favorite)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    loadFavorites()
-                    Toast.makeText(context, context.getString(R.string.added_to_favorites), Toast.LENGTH_SHORT).show()
-                    holder.binding.iconFavorite.setImageResource(R.drawable.fav2)
-                }, { throwable ->
-                    Toast.makeText(context, "Hata: ${throwable.message}", Toast.LENGTH_SHORT).show()
-                })
-        )
-    }
-
-    private fun removeFromFavorites(item: BottomShetModelSubn, holder: ProductViewHolder) {
-        val favorite = favoritesList.find { it.id == item.id }
-        favorite?.let { favoriteToDelete ->
+        if (isFavorite) {
+            // Favorilerden kaldır
             compositeDisposable.add(
-                dao.deleteFavorite(favoriteToDelete)
+                dao.deleteFavoriteById(product.id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        loadFavorites()
-                        Toast.makeText(context, context.getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT).show()
-                        holder.binding.iconFavorite.setImageResource(R.drawable.fav1)
+                        Toast.makeText(context, "Favorilerden kaldırıldı", Toast.LENGTH_SHORT).show()
+                        loadFavorites() // Favorileri yeniden yükle
                     }, { throwable ->
-                        Toast.makeText(context, "Hata: ${throwable.localizedMessage}", Toast.LENGTH_SHORT).show()
+                        Log.e("ProductAdapter", "Error removing from favorites", throwable)
+                    })
+            )
+        } else {
+            // Favorilere ekle
+            val favoriteData = FavoritesData(
+                productId = product.id,
+                productName = product.title,
+                productPrice = product.price,
+                productImage = product.image,
+                productDescription = product.description
+            )
+
+            compositeDisposable.add(
+                dao.insertFavorite(favoriteData)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        Toast.makeText(context, "Favorilere eklendi", Toast.LENGTH_SHORT).show()
+                        loadFavorites() // Favorileri yeniden yükle
+                    }, { throwable ->
+                        Log.e("ProductAdapter", "Error adding to favorites", throwable)
                     })
             )
         }
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
+    private fun navigateToProductDetails(product: Product) {
+        val intent = Intent(context, ProductDetailsActivity::class.java).apply {
+            putExtra("product", product)
+        }
+        context.startActivity(intent)
+    }
+
+    fun dispose() {
         compositeDisposable.clear()
     }
-
-    fun BottomShetModelSubn.toFavoritesData(): FavoritesData {
-        return FavoritesData(
-            id = this.id,
-            name = this.title,
-            price = this.newPrice,
-            imageUrl = this.img  // This is the drawable resource ID (e.g., R.drawable.photo9)
-        )
-    }
-
-    fun FavoritesData.toBottomShetModelSubn(): BottomShetModelSubn {
-        return BottomShetModelSubn(
-            id = this.id,
-            title = this.name,
-            price = this.price,
-            img = this.imageUrl.toInt(),
-            oldPrice = 0.1,
-            newPrice = 0.1,
-            discountInfo = ""
-        )
-    }
-
 }

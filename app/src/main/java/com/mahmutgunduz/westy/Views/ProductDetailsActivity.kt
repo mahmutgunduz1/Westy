@@ -4,84 +4,122 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.chip.Chip
-import com.mahmutgunduz.westy.R
-import com.mahmutgunduz.westy.adapters.ProductImagesAdapter
-import com.mahmutgunduz.westy.databinding.ActivityProductDetailsBinding
+import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 
+import com.mahmutgunduz.westy.R
+import com.mahmutgunduz.westy.data.model.Product
+import com.mahmutgunduz.westy.databinding.ActivityProductDetailsBinding
+import com.mahmutgunduz.westy.viewmodel.ProductViewModel
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class ProductDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailsBinding
+    private val viewModel: ProductViewModel by viewModels()
     private var selectedSize: String? = null // Seçili beden
-    
-    // ViewPager için görsel listesi
-    private val images = listOf(
-        R.drawable.photo10,
-        R.drawable.photo11
-    )
+    private var product: Product? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupViews()
+        // Intent'ten ürün bilgisini al
+        product = intent.getParcelableExtra<Product>("product")
+        
+        // Ürün bilgisi varsa doğrudan göster, yoksa API'den çek
+        product?.let {
+            displayProductDetails(it)
+        } ?: run {
+            // Ürün ID'sini al ve API'den çek
+            val productId = intent.getIntExtra("productId", -1)
+            if (productId != -1) {
+                loadProductDetails(productId)
+            } else {
+                // Hata durumu
+                showError("Ürün bilgisi bulunamadı")
+            }
+        }
+
         setupListeners()
     }
 
-    private fun setupViews() {
-        // Üstü çizili fiyat gösterimi
-        binding.originalPrice.paintFlags = binding.originalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+    private fun loadProductDetails(productId: Int) {
+        // Yükleme durumunu göster
+        binding.progressBar.visibility = View.VISIBLE
         
-        setupProductImages()
-        setupSizeChips()
+        // ViewModel'den ürün detaylarını çek
+        viewModel.loadProductById(productId)
+        
+        // ViewModel'i gözlemle
+        viewModel.product.observe(this, Observer { product ->
+            binding.progressBar.visibility = View.GONE
+            this.product = product
+            displayProductDetails(product)
+        })
+        
+        // Hata durumunu gözlemle
+        viewModel.error.observe(this, Observer { error ->
+            binding.progressBar.visibility = View.GONE
+            error?.let {
+                showError(it)
+            }
+        })
+    }
+
+    private fun displayProductDetails(product: Product) {
+        with(binding) {
+            // Ürün başlığı
+            productTitle.text = product.title
+            
+            // Ürün fiyatı
+            productPrice.text = String.format("%.2f ₺", product.price)
+            
+            // İndirimli fiyat gösterimi (örnek olarak %10 indirim)
+            val calculatedOriginalPrice = product.price * 1.1
+            originalPrice.text = String.format("%.2f ₺", calculatedOriginalPrice)
+            originalPrice.paintFlags = originalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            
+            // Ürün açıklaması
+            productDescription.text = product.description
+            
+            // Ürün kategorisi
+            productCategory.text = product.category
+            
+            // Ürün resmi
+            Glide.with(this@ProductDetailsActivity)
+                .load(product.image)
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.error_image)
+                .into(productImage)
+            
+            // Ürün değerlendirmesi
+            product.rating?.let { rating ->
+                ratingBar.rating = rating.rate.toFloat()
+                ratingCount.text = "(${rating.count} değerlendirme)"
+                ratingLayout.visibility = View.VISIBLE
+            } ?: run {
+                ratingLayout.visibility = View.GONE
+            }
+        }
     }
 
     private fun setupListeners() {
         // Tüm butonlar için click listener'ları ayarla
         with(binding) {
-            backButton.setOnClickListener { onBackPressed() }
+            backButton.setOnClickListener { finish() }
             shareButton.setOnClickListener { shareProduct() }
             favoriteButton.setOnClickListener { toggleFavorite() }
             addToCartButton.setOnClickListener { addToCart() }
-        }
-    }
-
-    private fun setupProductImages() {
-        // ViewPager adapter'ını ayarla
-        binding.productImageViewPager.apply {
-            adapter = ProductImagesAdapter(images)
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
-            // Sayfa değişimlerini dinle
-            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    // İndikatörü güncelle
-                    binding.imageIndicator.selectTab(binding.imageIndicator.getTabAt(position))
-                }
-            })
-        }
-
-        // TabLayout indikatörlerini ayarla
-        repeat(images.size) {
-            binding.imageIndicator.addTab(binding.imageIndicator.newTab())
-        }
-    }
-
-    private fun setupSizeChips() {
-        binding.sizeChipGroup.apply {
-            // Varsayılan seçili beden yok
-            clearCheck()
             
-            // Chip'lere tıklanınca
-            setOnCheckedChangeListener { group, checkedId ->
-                val chip = group.findViewById<Chip>(checkedId)
-                if (chip != null) {
-                    selectedSize = chip.text.toString()
-                    updateAddToCartButton()
-                }
+            // Beden seçimi
+            sizeChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                val chip = group.findViewById<com.google.android.material.chip.Chip>(checkedIds.firstOrNull() ?: -1)
+                selectedSize = chip?.text?.toString()
+                updateAddToCartButton()
             }
         }
     }
@@ -119,12 +157,10 @@ class ProductDetailsActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.select_size), Toast.LENGTH_SHORT).show()
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // ViewPager callback'ini temizle
-        binding.productImageViewPager.unregisterOnPageChangeCallback(
-            object : ViewPager2.OnPageChangeCallback() {}
-        )
+    
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        binding.errorLayout.visibility = View.VISIBLE
+        binding.contentLayout.visibility = View.GONE
     }
 }

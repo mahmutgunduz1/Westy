@@ -1,7 +1,7 @@
 package com.mahmutgunduz.westy.di
 
 import android.content.Context
-import com.mahmutgunduz.westy.data.dao.FavoritesDao
+import com.mahmutgunduz.westy.dataBase.FavoritesDao
 import com.mahmutgunduz.westy.dataBase.FavoritesDataBase
 import dagger.Module
 import dagger.Provides

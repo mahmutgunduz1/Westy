@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mahmutgunduz.westy.Model.BottomShetModelSubn
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.Views.ProductDetailsActivity
@@ -16,9 +17,10 @@ import com.mahmutgunduz.westy.dataBase.FavoritesDao
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.core.CompletableObserver
 import io.reactivex.rxjava3.disposables.Disposable
+import com.mahmutgunduz.westy.data.model.Product
+import com.mahmutgunduz.westy.data.model.Rating
 
 class FavoritesAdapter(
     private var favoritesList: ArrayList<FavoritesData>,
@@ -33,31 +35,28 @@ class FavoritesAdapter(
         
         fun bind(item: FavoritesData) {
             with(binding) {
-                productName.text = item.name
-                productPrice.text = "${item.price} TL"
+                productName.text = item.productName
+                productPrice.text = "${item.productPrice} TL"
 
                 // Ürün resmini ayarla
-                try {
-                    Log.d("FavoritesAdapter", "Setting image resource: ${item.imageUrl}")
-                    productImage.setImageResource(item.imageUrl)
-                } catch (e: Exception) {
-                    Log.e("FavoritesAdapter", "Error loading image with resource ID ${item.imageUrl}: ${e.message}")
-                    // Eğer orijinal resim yüklenemezse, varsayılan resmi kullan
-                    productImage.setImageResource(R.drawable.categories1)
-                }
+                Glide.with(context)
+                    .load(item.productImage)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(productImage)
 
                 root.setOnClickListener {
-                    val productModel = BottomShetModelSubn(
-                        id = item.id,
-                        title = item.name,
-                        img = item.imageUrl,
-                        price = item.price,
-                        oldPrice = item.price,
-                        newPrice = item.price,
-                        discountInfo = ""
+                    val product = Product(
+                        id = item.productId,
+                        title = item.productName,
+                        price = item.productPrice,
+                        description = item.productDescription,
+                        category = "",  // You might want to add a category field to FavoritesData
+                        image = item.productImage,
+                        rating = null  // You might want to add a rating field to FavoritesData
                     )
                     val intent = Intent(context, ProductDetailsActivity::class.java)
-                    intent.putExtra("product", productModel)
+                    intent.putExtra("product", product)
                     context.startActivity(intent)
                 }
 
@@ -72,7 +71,7 @@ class FavoritesAdapter(
     }
 
     private fun removeFromFavorites(item: FavoritesData, position: Int) {
-        dao.deleteFavorite(item)
+        dao.deleteFavoriteById(item.productId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
