@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.mahmutgunduz.westy.Model.BottomShetModelSubn
 import com.mahmutgunduz.westy.adapters.ProductAdapter
+import com.mahmutgunduz.westy.data.ProductLists
 import com.mahmutgunduz.westy.data.model.Product
 import com.mahmutgunduz.westy.dataBase.FavoritesDao
 import com.mahmutgunduz.westy.dataBase.FavoritesDataBase
@@ -26,6 +28,18 @@ class ProductFragment : Fragment() {
     private val viewModel: ProductViewModel by viewModels()
     private lateinit var productAdapter: ProductAdapter
 
+    companion object {
+        private const val ARG_CATEGORY = "category"
+        
+        fun newInstance(category: String): ProductFragment {
+            val fragment = ProductFragment()
+            val args = Bundle()
+            args.putString(ARG_CATEGORY, category)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,64 +54,24 @@ class ProductFragment : Fragment() {
         // Room veritabanı bağlantısı
         dao = FavoritesDataBase.getDatabase(requireContext()).favoritesDao()
         compositeDisposable = CompositeDisposable()
+
+        // Kategori bilgisini al
+        val category = arguments?.getString(ARG_CATEGORY) ?: ""
         
-        // RecyclerView ayarları
-        setupRecyclerView()
-        
-        // ViewModel'den gelen verileri gözlemle
-        observeViewModel()
-        
-        // Kategori ID'sini al ve ürünleri yükle
-        val selectedCategoryId = arguments?.getInt("selectedCategoryId") ?: -1
-        loadProductsByCategory(selectedCategoryId)
+        // Kategoriye göre ürünleri göster
+        val productList = ProductLists.getProductsForCategory(category)
+        setupRecyclerView(productList)
     }
-    
-    private fun setupRecyclerView() {
+
+    private fun setupRecyclerView(list: List<BottomShetModelSubn>) {
         binding.recyclerViewProducts.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
-            productAdapter = ProductAdapter(emptyList(), requireContext(), dao)
+            productAdapter = ProductAdapter(list, requireContext(), dao)
             adapter = productAdapter
         }
-    }
-    
-    private fun observeViewModel() {
-        // Ürünleri gözlemle
-        viewModel.products.observe(viewLifecycleOwner) { products ->
-            updateUI(products)
-        }
-        
-        // Yükleme durumunu gözlemle
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-        
-        // Hata durumunu gözlemle
-        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            errorMessage?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-    
-    private fun loadProductsByCategory(categoryId: Int) {
-        if (categoryId >= 0) {
-            val categoryName = viewModel.formatCategoryName(categoryId)
-            if (categoryName.isNotEmpty()) {
-                viewModel.loadProductsByCategory(categoryName)
-            } else {
-                viewModel.loadProducts() // Geçersiz kategori ID'si için tüm ürünleri yükle
-            }
-        } else {
-            viewModel.loadProducts() // Kategori ID'si yoksa tüm ürünleri yükle
-        }
-    }
-    
-    private fun updateUI(products: List<Product>) {
-        // Ürünleri adapter'a gönder
-        productAdapter.updateProducts(products)
-        
+
         // Ürün yoksa boş durum mesajını göster
-        binding.emptyStateLayout.visibility = if (products.isEmpty()) View.VISIBLE else View.GONE
+        binding.emptyStateLayout.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

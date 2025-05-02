@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class BottomShetModelSubn(
     val id: Int,
     val title: String,
-    val img: String,
+    val img: Int,
     val price: Double,
     val oldPrice: Double,
     val newPrice: Double,

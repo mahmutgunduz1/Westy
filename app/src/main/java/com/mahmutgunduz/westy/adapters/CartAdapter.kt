@@ -1,6 +1,7 @@
 package com.mahmutgunduz.westy.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -40,12 +41,32 @@ class CartAdapter(
                     .format(totalItemPrice)
                 productTotalPrice.text = formattedTotalPrice
                 
-                // Load product image
-                Glide.with(context)
-                    .load(item.productImage)
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .into(productImage)
+                // Load product image with improved handling
+                try {
+                    // Try to parse image path as an integer (resource ID)
+                    val imageResId = item.productImage.toIntOrNull()
+                    if (imageResId != null) {
+                        // If it's a valid resource ID, load it directly
+                        Glide.with(context)
+                            .load(imageResId)
+                            .placeholder(R.drawable.placeholder_image)
+                            .error(R.drawable.error_image)
+                            .into(productImage)
+                    } else {
+                        // Otherwise, treat it as a URL or file path
+                        Glide.with(context)
+                            .load(item.productImage)
+                            .placeholder(R.drawable.placeholder_image)
+                            .error(R.drawable.error_image)
+                            .into(productImage)
+                    }
+                } catch (e: Exception) {
+                    Log.e("CartAdapter", "Error loading image: ${e.message}")
+                    // If there's any error, show the error image
+                    Glide.with(context)
+                        .load(R.drawable.error_image)
+                        .into(productImage)
+                }
                 
                 // Set click listeners
                 buttonIncrement.setOnClickListener {

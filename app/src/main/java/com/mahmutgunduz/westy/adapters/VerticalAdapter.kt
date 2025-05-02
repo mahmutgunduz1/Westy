@@ -32,11 +32,12 @@ class VerticalAdapter(
         
         holder.binding.apply {
             imageVieww.setImageResource(item.img)
-
+            tvDiscountLabel.text = item.discountLabel
+            tvCategoryName.text = item.categoryName
         }
 
         holder.itemView.setOnClickListener {
-            val productFragment = ProductFragment()
+            val productFragment = ProductFragment.newInstance(item.categoryName)
             fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, productFragment)
                 .addToBackStack(null)

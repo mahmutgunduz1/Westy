@@ -48,9 +48,8 @@ class CategoriesFragment : Fragment() {
         categoriesList.add(CategoriesModel(1, "Alt Giyim", R.drawable.pantss2))
         categoriesList.add(CategoriesModel(2, "Ayakkabılar", R.drawable.shoeee))
         categoriesList.add(CategoriesModel(3, "Aksesuarlar", R.drawable.hatt))
-        categoriesList.add(CategoriesModel(4, "Dış Giyim", R.drawable.mont3))
-        categoriesList.add(CategoriesModel(5, "Yeni Gelenler", R.drawable.new4))
-        categoriesList.add(CategoriesModel(6, "Çok Satanlar", R.drawable.hatt))
+        categoriesList.add(CategoriesModel(4, "Dış Giyim", R.drawable.yelek2))
+
     }
 
     override fun onDestroyView() {

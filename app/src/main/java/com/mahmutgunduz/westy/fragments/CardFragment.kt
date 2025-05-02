@@ -9,15 +9,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mahmutgunduz.westy.Model.BottomShetModelSubn
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.Views.ProductDetailsActivity
 import com.mahmutgunduz.westy.adapters.CartAdapter
+import com.mahmutgunduz.westy.data.model.Product
 import com.mahmutgunduz.westy.dataBase.CartData
 import com.mahmutgunduz.westy.databinding.FragmentCardBinding
 import com.mahmutgunduz.westy.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
 import java.util.Locale
+import android.util.Log
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,9 +89,49 @@ class CardFragment : Fragment() {
     }
     
     private fun navigateToProductDetails(cartItem: CartData) {
-        val intent = Intent(requireContext(), ProductDetailsActivity::class.java)
-        intent.putExtra("productId", cartItem.productId)
-        startActivity(intent)
+        try {
+            // First, try to convert the image to an integer resource ID
+            val imageResId = try {
+                cartItem.productImage.toInt()
+            } catch (e: NumberFormatException) {
+                0 // Default to 0 if it's not a resource ID
+            }
+            
+            // Check if this is a BottomShetModelSubn type product (using the image resource ID)
+            if (imageResId > 0) {
+                // Create a BottomShetModelSubn from the cart data
+                val product = BottomShetModelSubn(
+                    id = cartItem.productId,
+                    title = cartItem.productName,
+                    img = imageResId,
+                    price = cartItem.productPrice,
+                    oldPrice = cartItem.productPrice * 1.2, // Example old price calculation
+                    newPrice = cartItem.productPrice,
+                    discountInfo = cartItem.productDescription.replace(Regex(" - Beden: [A-Z]+$"), "") // Remove size info
+                )
+                
+                val intent = Intent(requireContext(), ProductDetailsActivity::class.java)
+                intent.putExtra("product", product)
+                startActivity(intent)
+            } else {
+                // It's a regular Product
+                val product = Product(
+                    id = cartItem.productId,
+                    title = cartItem.productName,
+                    price = cartItem.productPrice,
+                    description = cartItem.productDescription.replace(Regex(" - Beden: [A-Z]+$"), ""), // Remove size info
+                    category = "",
+                    image = cartItem.productImage
+                )
+                
+                val intent = Intent(requireContext(), ProductDetailsActivity::class.java)
+                intent.putExtra("product", product)
+                startActivity(intent)
+            }
+        } catch (e: Exception) {
+            Log.e("CardFragment", "Error navigating to product details: ${e.message}")
+            Toast.makeText(requireContext(), "Ürün detaylarına ulaşılamadı", Toast.LENGTH_SHORT).show()
+        }
     }
     
     private fun observeViewModel() {

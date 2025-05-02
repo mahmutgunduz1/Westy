@@ -2,12 +2,14 @@ package com.mahmutgunduz.westy.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.ColorSpace.Model
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.mahmutgunduz.westy.Model.BottomShetModelSubn
 import com.mahmutgunduz.westy.R
 import com.mahmutgunduz.westy.Views.ProductDetailsActivity
 import com.mahmutgunduz.westy.data.model.Product
@@ -21,7 +23,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 class ProductAdapter(
-    private var productList: List<Product>,
+    private var productList: List<BottomShetModelSubn>,
     private val context: Context,
     private val dao: FavoritesDao
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
@@ -47,7 +49,7 @@ class ProductAdapter(
         )
     }
 
-    fun updateProducts(newProducts: List<Product>) {
+    fun updateProducts(newProducts: List<BottomShetModelSubn>) {
         productList = newProducts
         notifyDataSetChanged()
     }
@@ -71,7 +73,7 @@ class ProductAdapter(
 
             // Ürün resmini yükle
             Glide.with(context)
-                .load(currentProduct.image)
+                .load(currentProduct.img)
                 .placeholder(R.drawable.placeholder_image)
                 .error(R.drawable.error_image)
                 .into(imageViewProduct)
@@ -82,7 +84,7 @@ class ProductAdapter(
 
             // Favori butonuna tıklama
             imageViewFavorite.setOnClickListener {
-                toggleFavorite(currentProduct)
+                toggleFavorite( currentProduct)
             }
 
             // Ürüne tıklama
@@ -92,7 +94,7 @@ class ProductAdapter(
         }
     }
 
-    private fun toggleFavorite(product: Product) {
+    private fun toggleFavorite(product: BottomShetModelSubn) {
         val isFavorite = favoritesList.any { it.productId == product.id }
 
         if (isFavorite) {
@@ -114,8 +116,8 @@ class ProductAdapter(
                 productId = product.id,
                 productName = product.title,
                 productPrice = product.price,
-                productImage = product.image,
-                productDescription = product.description
+                productImage = product.img.toString(),
+                productDescription = product.discountInfo
             )
 
             compositeDisposable.add(
@@ -132,7 +134,7 @@ class ProductAdapter(
         }
     }
 
-    private fun navigateToProductDetails(product: Product) {
+    private fun navigateToProductDetails(product: BottomShetModelSubn) {
         val intent = Intent(context, ProductDetailsActivity::class.java).apply {
             putExtra("product", product)
         }

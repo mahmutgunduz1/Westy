@@ -136,30 +136,96 @@ class HomePageFragment : Fragment() {
 
     private fun setupHorizontalRecyclerView() {
         horizontalList.clear()
-        horizontalList.addAll(listOf(
-            HorizontalModel(R.drawable.photo9, "Yeni Sezon"),
-            HorizontalModel(R.drawable.photo5, "Trend"),
-            HorizontalModel(R.drawable.photo10, "Popüler"),
-            HorizontalModel(R.drawable.photo12, "İndirimli"),
-            HorizontalModel(R.drawable.photo12, "İndirimli"),
-            HorizontalModel(R.drawable.photo12, "İndirimli"),
-            HorizontalModel(R.drawable.photo12, "İndirimli")
-        ))
+        horizontalList.addAll(
+            listOf(
+                HorizontalModel(
+                    id = 1,
+                    img = R.drawable.photo9, 
+                    txt = "Basic Tişört", 
+                    price = 199.99, 
+                    oldPrice = 249.99, 
+                    discountInfo = "Yeni Sezon"
+                ),
+                HorizontalModel(
+                    id = 2,
+                    img = R.drawable.photo5, 
+                    txt = "Siyah Kapüşonlu", 
+                    price = 329.99, 
+                    oldPrice = 379.99, 
+                    discountInfo = "Trend"
+                ),
+                HorizontalModel(
+                    id = 7,
+                    img = R.drawable.kazak1, 
+                    txt = "Beyaz Kazak", 
+                    price = 399.99, 
+                    oldPrice = 449.99, 
+                    discountInfo = "Kış Koleksiyonu"
+                ),
+                HorizontalModel(
+                    id = 16,
+                    img = R.drawable.pantalon1, 
+                    txt = "Kot Pantolon", 
+                    price = 299.99, 
+                    oldPrice = 349.99, 
+                    discountInfo = "Yeni Sezon"
+                ),
+                HorizontalModel(
+                    id = 34,
+                    img = R.drawable.spor1, 
+                    txt = "Beyaz Spor Ayakkabı", 
+                    price = 399.99, 
+                    oldPrice = 449.99, 
+                    discountInfo = "Son Stok"
+                ),
+                HorizontalModel(
+                    id = 58,
+                    img = R.drawable.goz1, 
+                    txt = "Güneş Gözlüğü", 
+                    price = 199.99, 
+                    oldPrice = 249.99, 
+                    discountInfo = "Yaz Koleksiyonu"
+                ),
+                HorizontalModel(
+                    id = 70,
+                    img = R.drawable.mont1, 
+                    txt = "Kışlık Mont", 
+                    price = 599.99, 
+                    oldPrice = 699.99, 
+                    discountInfo = "Sezon Sonu"
+                )
+            )
+        )
 
         binding.featuredRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = HorizontalAdapter(horizontalList)
+            adapter = HorizontalAdapter(horizontalList, requireContext())
         }
     }
 
     private fun setupVerticalRecyclerView() {
         verticalList.clear()
         verticalList.addAll(listOf(
-            VerticalModel(R.drawable.turuncu),
-            VerticalModel(R.drawable.photo4),
-            VerticalModel(R.drawable.photo3),
-            VerticalModel(R.drawable.turuncu),
-
+            VerticalModel(
+                img = R.drawable.turuncu,
+                categoryName = "Bluzlar",
+                discountLabel = "20% İndirim"
+            ),
+            VerticalModel(
+                img = R.drawable.photo4,
+                categoryName = "Sweatshirtler",
+                discountLabel = "Özel Fiyat"
+            ),
+            VerticalModel(
+                img = R.drawable.photo3,
+                categoryName = "Montlar",
+                discountLabel = "Outlet"
+            ),
+            VerticalModel(
+                img = R.drawable.turuncu,
+                categoryName = "Spor Ayakkabılar",
+                discountLabel = "2 Al 1 Öde"
+            )
         ))
 
         binding.allProductsRecyclerView.apply {

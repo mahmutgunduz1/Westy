@@ -39,25 +39,57 @@ class FavoritesAdapter(
                 productPrice.text = "${item.productPrice} TL"
 
                 // Ürün resmini ayarla
-                Glide.with(context)
-                    .load(item.productImage)
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .into(productImage)
+                try {
+                    // First try to load as a resource ID (integer)
+                    val imageResId = item.productImage.toIntOrNull()
+                    if (imageResId != null) {
+                        Glide.with(context)
+                            .load(imageResId)
+                            .placeholder(R.drawable.placeholder_image)
+                            .error(R.drawable.error_image)
+                            .into(productImage)
+                    } else {
+                        // If not a resource ID, try as a string URL or path
+                        Glide.with(context)
+                            .load(item.productImage)
+                            .placeholder(R.drawable.placeholder_image)
+                            .error(R.drawable.error_image)
+                            .into(productImage)
+                    }
+                } catch (e: Exception) {
+                    Log.e("FavoritesAdapter", "Error loading image: ${e.message}")
+                    Glide.with(context)
+                        .load(R.drawable.error_image)
+                        .into(productImage)
+                }
 
                 root.setOnClickListener {
-                    val product = Product(
-                        id = item.productId,
-                        title = item.productName,
-                        price = item.productPrice,
-                        description = item.productDescription,
-                        category = "",  // You might want to add a category field to FavoritesData
-                        image = item.productImage,
-                        rating = null  // You might want to add a rating field to FavoritesData
-                    )
-                    val intent = Intent(context, ProductDetailsActivity::class.java)
-                    intent.putExtra("product", product)
-                    context.startActivity(intent)
+                    try {
+                        // Convert the stored image string back to an integer if it's a resource ID
+                        val imageResource = try {
+                            item.productImage.toInt()
+                        } catch (e: NumberFormatException) {
+                            0 // Default to 0 if conversion fails
+                        }
+                        
+                        // Create a BottomShetModelSubn instead of Product
+                        val bottomModel = BottomShetModelSubn(
+                            id = item.productId,
+                            title = item.productName,
+                            img = imageResource,
+                            price = item.productPrice,
+                            oldPrice = item.productPrice * 1.2, // Example old price (20% higher)
+                            newPrice = item.productPrice,
+                            discountInfo = item.productDescription
+                        )
+                        
+                        val intent = Intent(context, ProductDetailsActivity::class.java)
+                        intent.putExtra("product", bottomModel)
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        Log.e("FavoritesAdapter", "Error navigating to product details: ${e.message}")
+                        Toast.makeText(context, "Ürün detayları açılırken bir hata oluştu", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 buttonRemoveFavorite.setOnClickListener {
